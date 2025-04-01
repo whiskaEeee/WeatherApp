@@ -7,12 +7,6 @@ function setupAjaxFilter() {
     document.getElementById("filterForm").addEventListener("submit", function (event) {
         event.preventDefault();
 
-        let selectedMonths = getSelectedValues("month-checkbox");
-        let selectedYears = getSelectedValues("year-checkbox");
-
-        document.getElementById("selectedMonths").value = selectedMonths.join(",");
-        document.getElementById("selectedYears").value = selectedYears.join(",");
-
         let formData = new FormData(this);
         let queryString = new URLSearchParams(formData).toString();
 
@@ -37,6 +31,7 @@ function setupAjaxPagination() {
             let url = new URL(this.href);
             let params = new URLSearchParams(url.search);
 
+
             let formData = new FormData(document.getElementById("filterForm"));
             for (let [key, value] of formData.entries()) {
                 params.set(key, value);
@@ -54,9 +49,4 @@ function setupAjaxPagination() {
                 .catch(error => console.error("Ошибка:", error));
         });
     });
-}
-
-function getSelectedValues(className) {
-    return Array.from(document.querySelectorAll("." + className + ":checked"))
-        .map(checkbox => checkbox.value);
 }
