@@ -1,0 +1,38 @@
+﻿<form asp-action="UploadExcel" asp-controller="Import" method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Upload Excel files</label>
+        <div id="dropZone" class="rounded border border-primary p-4 text-center">
+            Drag and drop Excel files here or click to select
+        </div>
+        <div id="fileList" class="mt-2 d-none">
+            <ul class="list-group"></ul>
+        </div>
+        <div id="errorMessage" class="alert alert-danger d-none mt-2"></div>
+        <input type="file" id="formFile" name="files" class="d-none" accept=".xlsx,.xls" multiple />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+<div id="alert-container" class="position-fixed top-0 end-0 p-3"></div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let message = @Html.Raw(Json.Serialize(TempData["Message"]));
+
+        if (message) {
+            let messages = message.includes("|")
+                ? message.split("|")
+                : [message];
+
+            messages.forEach(msg => showAlert(msg.trim()));
+        }
+    });
+</script>
+
+@section Scripts {
+
+    <script src="~/js/Import/upload-file.js"></script>
+    <script src="~/js/Import/allert-show.js" defer></script>
+}

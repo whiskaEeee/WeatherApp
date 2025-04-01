@@ -1,0 +1,68 @@
+﻿@model IPagedList<WeatherData>
+
+@{
+    var columnNames = typeof(WeatherData).GetProperties()
+    .Skip(1)
+    .Select(p => new
+    {
+        Property = p.Name,
+        Column = p.GetCustomAttribute<ColumnAttribute>()?.Name ?? p.Name
+    });
+}
+
+@if (Model.Any())
+{
+    <table class="table table-striped rounded weather-table">
+        <thead class="text-white">
+            <tr>
+                @foreach (var column in columnNames)
+                {
+                    <th class="text-center align-middle">@column.Column</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Date?.ToString("yyyy-MM-dd")</td>
+                    <td>@item.Time?.ToString("HH:mm")</td>
+                    <td>@item.Temperature</td>
+                    <td>@item.Humidity</td>
+                    <td>@item.DewPoint</td>
+                    <td>@item.Pressure</td>
+                    <td>@item.WindDirection</td>
+                    <td>@item.WindSpeed</td>
+                    <td>@item.Cloudiness</td>
+                    <td>@item.CloudBaseHeight</td>
+                    <td>@item.Visibility</td>
+                    <td>@item.WeatherDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination-container d-flex justify-content-center mt-3">
+        @Html.PagedListPager(Model, page => Url.Action("Filter", new
+            {
+                page,
+                month = Context.Request.Query["month"],
+                year = Context.Request.Query["year"]
+            }),
+                new PagedListRenderOptions
+    {
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="text-center">
+            <img src="~/images/no_data_img.svg" alt="Data Not Available" class="img-fluid" style="width: 100px; height: auto;">
+            <p class="h2 mt-2 color-purple">Нет данных</p>
+        </div>
+    </div>
+
+}
